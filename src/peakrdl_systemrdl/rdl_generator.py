@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Type
 
 from systemrdl.walker import RDLListener, RDLWalker
+from systemrdl import rdltypes
 
 from .definition_generator import DefinitionGenerator
 from .stringify import stringify_rdl_value
@@ -37,6 +38,21 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
             value_s = stringify_rdl_value(value)
             self.add_content(f"{prop_name} = {value_s};")
 
+    def define_enum(self, enum: Type[rdltypes.UserEnum])-> None:
+        self.push(f"enum {enum.type_name}", "")
+        for identifier, member in enum.members.items():
+            if member.rdl_name or member.rdl_desc:
+                self.add_content(f"{identifier} = {member.value} {{")
+                if member.rdl_name:
+                    self.add_content(f"    name = {stringify_rdl_value(member.rdl_name)};")
+                if member.rdl_desc:
+                    self.add_content(f"    desc = {stringify_rdl_value(member.rdl_desc)};")
+                self.add_content("};")
+            else:
+                self.add_content(f"{identifier} = {member.value};")
+        self.pop()
+
+
     def get_addressable_assignment(self, node: 'AddressableNode') -> str:
         a = f" @ 0x{node.raw_address_offset:X}"
         if node.is_array:
@@ -70,6 +86,11 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
             suffix += f" = 0x{reset:X}"
 
         self.push("field", node.inst_name, suffix=suffix, is_external=node.external)
+
+        encode = node.get_property('encode')
+        if encode is not None:
+            self.define_enum(encode)
+
         self.assign_properties(node)
 
     def enter_Signal(self, node: 'SignalNode') -> None:
