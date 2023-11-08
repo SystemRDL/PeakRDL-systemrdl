@@ -17,7 +17,7 @@ description = "Write a register model to a SystemRDL file"
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = [
-    "SystmRDL", "PeakRDL", "CSR", "compiler", "tool", "registers", "generator",
+    "SystemRDL", "PeakRDL", "CSR", "compiler", "tool", "registers", "generator",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
