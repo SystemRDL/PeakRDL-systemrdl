@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "peakrdl-systemrdl"
 dynamic = ["version"]
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 dependencies = [
     "systemrdl-compiler >= 1.25.1, < 2",
 ]
