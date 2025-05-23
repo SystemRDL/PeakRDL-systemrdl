@@ -88,6 +88,7 @@ disable=
         too-many-statements,
         too-many-instance-attributes,
         too-many-function-args,
+        too-many-positional-arguments,
         line-too-long,
 
         # Noise / Don't care
@@ -98,10 +99,7 @@ disable=
         abstract-method,
         protected-access,
         duplicate-code,
-        cyclic-import,
-        unidiomatic-typecheck,
-
-        # Can't do until py35 support is dropped
+        unused-argument,
         consider-using-f-string
 
 # Enable the message, report, category or checker with the given id(s). You can
@@ -145,7 +143,7 @@ max-nested-blocks=5
 # inconsistent-return-statements if a never returning function is called then
 # it will be considered as an explicit return statement and no message will be
 # printed.
-never-returning-functions=sys.exit
+never-returning-functions=sys.exit,argparse.parse_error
 
 
 [STRING]
@@ -495,7 +493,7 @@ valid-metaclass-classmethod-first-arg=cls
 ignored-parents=
 
 # Maximum number of arguments for function / method.
-max-args=8
+max-args=16
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=7
@@ -570,5 +568,5 @@ preferred-modules=
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception
+overgeneral-exceptions=builtin.BaseException,
+                       builtin.Exception

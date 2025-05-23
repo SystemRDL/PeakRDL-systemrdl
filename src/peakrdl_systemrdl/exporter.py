@@ -8,8 +8,7 @@ if TYPE_CHECKING:
     from systemrdl.messages import MessageHandler
 
 class SystemRDLExporter:
-    def __init__(self) -> None:
-        self.msg = None # type: MessageHandler
+    msg: "MessageHandler"
 
     def export(self, node: Union[AddrmapNode, RootNode], path: str) -> None:
         self.msg = node.env.msg

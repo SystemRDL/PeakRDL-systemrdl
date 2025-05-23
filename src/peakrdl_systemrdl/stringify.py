@@ -7,13 +7,13 @@ def stringify_rdl_value(value: Any) -> str:
     Convert value into its RDL string.
     """
 
-    if type(value) == int:
-        return stringify_int(value)
-    elif type(value) == bool:
+    if isinstance(value, bool):
         return stringify_boolean(value)
-    elif type(value) == str:
+    elif isinstance(value, int):
+        return stringify_int(value)
+    elif isinstance(value, str):
         return stringify_string(value)
-    elif type(value) == list:
+    elif isinstance(value, list):
         return stringify_array(value)
     elif isinstance(value, rdltypes.BuiltinEnum):
         return stringify_builtin_enum(value)
@@ -57,7 +57,7 @@ def stringify_builtin_enum(value: rdltypes.BuiltinEnum) -> str:
 
 
 def stringify_user_enum_member(value: rdltypes.UserEnum) -> str:
-    return "%s::%s" % (type(value).type_name, value.name)
+    return "%s::%s" % (type(value).type_name, value.name) # type: ignore
 
 
 def stringify_struct(value: rdltypes.UserStruct) -> str:
@@ -66,4 +66,4 @@ def stringify_struct(value: rdltypes.UserStruct) -> str:
 
 
 def stringify_user_enum_type(value: rdltypes.UserEnum) -> str:
-    return value.type_name
+    return value.type_name # type: ignore
