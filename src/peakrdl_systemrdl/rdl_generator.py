@@ -86,7 +86,7 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
         if isinstance(reset, int):
             suffix += f" = 0x{reset:X}"
 
-        self.push("field", kwf(node.inst_name), suffix=suffix, is_external=node.external)
+        self.push("field", kwf(node.inst_name), suffix=suffix)
 
         encode = node.get_property('encode')
         if encode is not None:
