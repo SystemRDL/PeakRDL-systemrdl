@@ -5,6 +5,7 @@ from systemrdl import rdltypes
 
 from .definition_generator import DefinitionGenerator
 from .stringify import stringify_rdl_value
+from .identifier_filter import kw_filter as kwf
 
 if TYPE_CHECKING:
     from systemrdl.node import AddressableNode
@@ -14,9 +15,9 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
     def get_content(self, node: 'Node') -> str:
 
         if node.type_name is not None:
-            type_name = node.type_name
+            type_name = kwf(node.type_name)
         else:
-            type_name = node.inst_name
+            type_name = kwf(node.inst_name)
 
         self.start("addrmap", type_name)
         self.assign_properties(node)
@@ -39,7 +40,7 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
             self.add_content(f"{prop_name} = {value_s};")
 
     def define_enum(self, enum: Type[rdltypes.UserEnum])-> None:
-        self.push(f"enum {enum.type_name}", "")
+        self.push(f"enum {kwf(enum.type_name)}", "")
         for identifier, member in enum.members.items():
             if member.rdl_name or member.rdl_desc:
                 self.add_content(f"{identifier} = {member.value} {{")
@@ -61,22 +62,22 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
 
     def enter_Addrmap(self, node: 'AddrmapNode') -> None:
         suffix = self.get_addressable_assignment(node)
-        self.push("addrmap", node.inst_name, node.array_dimensions, suffix)
+        self.push("addrmap", kwf(node.inst_name), node.array_dimensions, suffix)
         self.assign_properties(node)
 
     def enter_Regfile(self, node: 'RegfileNode') -> None:
         suffix = self.get_addressable_assignment(node)
-        self.push("regfile", node.inst_name, node.array_dimensions, suffix, node.external)
+        self.push("regfile", kwf(node.inst_name), node.array_dimensions, suffix, node.external)
         self.assign_properties(node)
 
     def enter_Mem(self, node: 'MemNode') -> None:
         suffix = self.get_addressable_assignment(node)
-        self.push("mem", node.inst_name, node.array_dimensions, suffix, True)
+        self.push("mem", kwf(node.inst_name), node.array_dimensions, suffix, True)
         self.assign_properties(node)
 
     def enter_Reg(self, node: 'RegNode') -> None:
         suffix = self.get_addressable_assignment(node)
-        self.push("reg", node.inst_name, node.array_dimensions, suffix, node.external)
+        self.push("reg", kwf(node.inst_name), node.array_dimensions, suffix, node.external)
         self.assign_properties(node)
 
     def enter_Field(self, node: 'FieldNode') -> None:
@@ -85,7 +86,7 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
         if isinstance(reset, int):
             suffix += f" = 0x{reset:X}"
 
-        self.push("field", node.inst_name, suffix=suffix, is_external=node.external)
+        self.push("field", kwf(node.inst_name), suffix=suffix, is_external=node.external)
 
         encode = node.get_property('encode')
         if encode is not None:
@@ -94,7 +95,7 @@ class RDLGenerator(DefinitionGenerator, RDLListener):
         self.assign_properties(node)
 
     def enter_Signal(self, node: 'SignalNode') -> None:
-        self.push("signal", node.inst_name)
+        self.push("signal", kwf(node.inst_name))
         self.assign_properties(node)
 
     def exit_Component(self, node: 'Node') -> None:

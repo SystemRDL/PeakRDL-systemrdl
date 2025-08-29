@@ -2,6 +2,8 @@ from typing import Any, List
 
 from systemrdl import rdltypes, node
 
+from .identifier_filter import kw_filter as kwf
+
 def stringify_rdl_value(value: Any) -> str:
     """
     Convert value into its RDL string.
@@ -57,13 +59,13 @@ def stringify_builtin_enum(value: rdltypes.BuiltinEnum) -> str:
 
 
 def stringify_user_enum_member(value: rdltypes.UserEnum) -> str:
-    return "%s::%s" % (type(value).type_name, value.name) # type: ignore
+    return "%s::%s" % (kwf(type(value).type_name), kwf(value.name)) # type: ignore
 
 
 def stringify_struct(value: rdltypes.UserStruct) -> str:
     elements = ["%s:%s" % (k, stringify_rdl_value(v)) for k,v in value._values.items()]
-    return "%s'{%s}" % (type(value).type_name, ", ".join(elements))
+    return "%s'{%s}" % (kwf(type(value).type_name), ", ".join(elements))
 
 
 def stringify_user_enum_type(value: rdltypes.UserEnum) -> str:
-    return value.type_name # type: ignore
+    return kwf(value.type_name) # type: ignore
