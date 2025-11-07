@@ -30,6 +30,11 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
 ]
 
+[project.optional-dependencies]
+cli = [
+    "peakrdl-cli >= 1.5.0",
+]
+
 [project.urls]
 Source = "https://github.com/SystemRDL/PeakRDL-systemrdl"
 Tracker = "https://github.com/SystemRDL/PeakRDL-systemrdl/issues"
